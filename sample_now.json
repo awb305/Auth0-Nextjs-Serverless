@@ -1,0 +1,41 @@
+{
+  "version": 2,
+  "env": {
+    "ROOT_DOMAIN": "[root domain]",
+    "AUTH0_DOMAIN": "[auth0 domain]",
+    "AUTH0_CLIENT_ID": "[auth0 client id]",
+    "AUTH0_CLIENT_SECRET": "[auth0 client secret]",
+    "AUTH0_CALLBACK_URL": "[root domain]/callback",
+    "REDIS_PASSWORD":  "[redis password]",
+    "REDIS_HOST": "[redis host]",
+    "REDIS_PORT": "[redis port]"
+  },
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@now/next"
+    },
+    {
+      "src": "auth/**/*.js",
+      "use": "@now/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/login",
+      "dest": "/auth/auth.js"
+    },
+    {
+      "src": "/callback",
+      "dest": "/auth/auth.js"
+    },
+    {
+      "src": "/logout",
+      "dest": "/auth/auth.js"
+    },
+    {
+      "src": "/user",
+      "dest": "/auth/auth.js"
+    }
+  ]
+}
