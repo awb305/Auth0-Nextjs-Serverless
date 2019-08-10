@@ -9,7 +9,9 @@ const Profile = ({ user }) => (
         <Link href="/">
           <a>Home</a>
         </Link>
-        <button onClick={logout}>Logout</button>
+        <button type="button" onClick={logout}>
+          Logout
+        </button>
         <div>{JSON.stringify(user)}</div>
       </div>
     ) : (

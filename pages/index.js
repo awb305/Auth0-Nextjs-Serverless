@@ -10,7 +10,9 @@ const Index = ({ user }) => (
           <a>Profile</a>
         </Link>
         <div>You're logged in as {user.displayName} </div>
-        <button onClick={logout}>Logout</button> 
+        <button type="button" onClick={logout}>
+          Logout
+        </button>
       </div>
     ) : (
       <div>
