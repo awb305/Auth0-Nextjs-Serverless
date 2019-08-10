@@ -21,30 +21,40 @@ export const withAuth = WrappedComponent =>
 
       componentProps = componentProps || {};
 
-      // determine the protocol for local vs production
-      let protocol = 'https:';
-      const host = req
-        ? req.headers['x-forwarded-host']
-        : window.location.hostname;
-      if (host.indexOf('localhost') > -1) {
-        protocol = 'http:';
+      if(!req){
+        console.log(window.__NEXT_DATA__.props.pageProps);
       }
+      // On client side find user in __NEXT_DATA__
+      if (!req && window.__NEXT_DATA__.props.pageProps.hasOwnProperty('user')) {
+        const { user } = window.__NEXT_DATA__.props.pageProps;
+        componentProps.user = user;
+        return { ...componentProps };
+      } else {
+        // determine the protocol for local vs production
+        let protocol = 'https:';
+        const host = req
+          ? req.headers['x-forwarded-host']
+          : window.location.hostname;
+        if (host.indexOf('localhost') > -1) {
+          protocol = 'http:';
+        }
 
-      // if on server side mimic the client making the request by using req headers
-      let options;
-      if (typeof res !== 'undefined') {
-        options = { credentials: 'same-origin' };
-        options.headers = req.headers;
+        // if on server side mimic the client making the request by using req headers
+        let options;
+        if (typeof res !== 'undefined') {
+          options = { credentials: 'same-origin' };
+          options.headers = req.headers;
+        }
+
+        const userData = await fetch(`${protocol}//${host}/user`, options);
+
+        // place user in component props
+        const userJson = await userData.json();
+        const { user } = userJson;
+        componentProps.user = user;
+
+        return { ...componentProps };
       }
-
-      const userData = await fetch(`${protocol}//${host}/user`, options);
-
-      // place user in component props
-      const userJson = await userData.json();
-      const { user } = userJson;
-      componentProps.user = user;
-
-      return { ...componentProps };
     }
 
     // event listen across tabs to sync logout
