@@ -9,6 +9,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 
 require('dotenv').config();
+
 const dev = process.env.NODE_ENV !== 'production';
 
 /* Connect to Redis */
@@ -16,7 +17,7 @@ const client = redis.createClient(
   parseInt(process.env.REDIS_PORT),
   process.env.REDIS_HOST,
   {
-    no_ready_check: true
+    no_ready_check: true,
   }
 );
 client.auth(process.env.REDIS_PASSWORD, err => {
@@ -37,7 +38,7 @@ const auth0Strategy = new Auth0Strategy(
     clientSecret: process.env.AUTH0_CLIENT_SECRET,
     callbackURL: dev
       ? 'http://localhost:3000/callback'
-      : process.env.AUTH0_CALLBACK_URL
+      : process.env.AUTH0_CALLBACK_URL,
   },
   function(accessToken, refreshToken, extraParams, profile, done) {
     return done(null, profile);
@@ -65,14 +66,14 @@ const sessionConfig = {
     host: process.env.REDIS_HOST,
     port: parseInt(process.env.REDIS_PORT),
     client,
-    ttl: 14 * 24 * 60 * 60
+    ttl: 14 * 24 * 60 * 60,
   }),
   cookie: {
-    maxAge: 86400 * 1000 // 24 hours in milliseconds
+    maxAge: 86400 * 1000, // 24 hours in milliseconds
   },
   name: 'token',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
 };
 
 if (app.get('env') === 'production') {
@@ -88,7 +89,7 @@ app.use(passport.session());
 app.get(
   '/login',
   passport.authenticate('auth0', {
-    scope: 'openid email profile'
+    scope: 'openid email profile',
   }),
   (req, res) => res.redirect('/')
 );
@@ -106,11 +107,9 @@ app.get('/callback', (req, res, next) => {
 
 app.get('/logout', (req, res) => {
   req.logout();
-  let BASE_URL = dev ? 'http://localhost:3000' : process.env.ROOT_DOMAIN;
+  const BASE_URL = dev ? 'http://localhost:3000' : process.env.ROOT_DOMAIN;
   res.redirect(
-    `https://${process.env.AUTH0_DOMAIN}/logout?client_id=${
-      process.env.AUTH0_CLIENT_ID
-    }&returnTo=${BASE_URL}`
+    `https://${process.env.AUTH0_DOMAIN}/logout?client_id=${process.env.AUTH0_CLIENT_ID}&returnTo=${BASE_URL}`
   );
 });
 
