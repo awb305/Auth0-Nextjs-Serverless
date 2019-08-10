@@ -9,8 +9,14 @@ export const logout = () => {
   Router.push('/logout');
 };
 
+// Gets the display name of a JSX component for dev tools
+const getDisplayName = wrappedComponent =>
+  wrappedComponent.displayName || wrappedComponent.name || 'wrappedComponent';
+
 export const withAuth = WrappedComponent =>
   class extends Component {
+    static displayName = `withAuth(${getDisplayName(WrappedComponent)})`;
+
     static async getInitialProps(ctx) {
       const { req, res } = ctx;
 
@@ -22,9 +28,12 @@ export const withAuth = WrappedComponent =>
       componentProps = componentProps || {};
 
       // On client side find user in __NEXT_DATA__
-      if (!req && window.__NEXT_DATA__.props.pageProps.hasOwnProperty('user')) {
-        const { user } = window.__NEXT_DATA__.props.pageProps;
-        componentProps.user = user;
+      if (!req) {
+        const { pageProps } = window.__NEXT_DATA__.props;
+        if ('user' in pageProps) {
+          componentProps.user = pageProps.user;
+          return { ...componentProps };
+        }
         return { ...componentProps };
       }
       // determine the protocol for local vs production
@@ -63,6 +72,7 @@ export const withAuth = WrappedComponent =>
       window.localStorage.removeItem('logout');
     }
 
+    // eslint-disable-next-line class-methods-use-this
     syncLogout(event) {
       if (event.key === 'logout') {
         console.log('logged out from storage!');

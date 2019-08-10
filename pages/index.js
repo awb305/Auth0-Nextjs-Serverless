@@ -16,6 +16,9 @@ const Index = ({ user }) => (
       </div>
     ) : (
       <div>
+        <Link href="/profile">
+          <a>Profile</a>
+        </Link>
         <div>You're logged out</div>
         <Link href="/login">
           <a>Log In</a>
