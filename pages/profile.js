@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import PropTypes from 'prop-types';
 import { logout, withAuth } from '../utils/withAuth';
 
 const Profile = ({ user }) => (
@@ -21,5 +22,9 @@ const Profile = ({ user }) => (
     )}
   </div>
 );
+
+Profile.propTypes = {
+	user: PropTypes.object, // eslint-disable-line
+};
 
 export default withAuth(Profile);

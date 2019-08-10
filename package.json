@@ -25,6 +25,7 @@
     "next": "^9.0.2",
     "passport": "^0.4.0",
     "passport-auth0": "^1.1.0",
+    "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "redis": "^2.8.0",

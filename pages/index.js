@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import PropTypes from 'prop-types';
 import { logout, withAuth } from '../utils/withAuth';
 
 const Index = ({ user }) => (
@@ -9,7 +10,7 @@ const Index = ({ user }) => (
           <a>Profile</a>
         </Link>
         <div>You're logged in as {user.displayName} </div>
-        <button onClick={logout}>Logout</button>
+        <button onClick={logout}>Logout</button> 
       </div>
     ) : (
       <div>
@@ -21,5 +22,9 @@ const Index = ({ user }) => (
     )}
   </div>
 );
+
+Index.propTypes = {
+	user: PropTypes.object, // eslint-disable-line
+};
 
 export default withAuth(Index);
