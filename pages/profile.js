@@ -16,6 +16,9 @@ const Profile = ({ user }) => (
       </div>
     ) : (
       <div>
+        <Link href="/">
+          <a>Home</a>
+        </Link>
         <div>You're logged out</div>
         <Link href="/login">
           <a>Log In</a>
